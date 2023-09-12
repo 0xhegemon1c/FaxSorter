@@ -22,7 +22,7 @@ Dim createFile As Boolean
 createFile = False
 Dim i As Integer: i = 1
 
-'Define path to the target folder in Outlook'
+'Define path to the target Outlook folder'
 Set moveToFolderSender1 = ns.Folders("Folder").Folders("subfolder").Folders("additional_subfolder")
 Set moveToFolderSender2 = ns.Folders("Folder").Folders("subfolder").Folders("additional_subfolder")
 
