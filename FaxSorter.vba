@@ -60,8 +60,9 @@ For Each objItem In Application.ActiveExplorer.Selection
             Next
           End If
         Next
+'this next part is used to sort faxes from multiple senders in Outlook. The email containing the fax is marked as read and moved to a subfolder in Outlook depending on which folder the pdf is downloaded to.'
           objItem.UnRead = False
-          Select Case fldrname 'this is used when sorting faxes from multiple senders, the email containing the fax is marked as read and moved to a subfolder in Outlook depending on which folder the pdf is downloaded to.'
+          Select Case fldrname 
           Case "C:\faxes\sender1"
           objItem.Move moveToFolderSender1
           Debug.Print "Fax sorted and moved to sender1 folder"
