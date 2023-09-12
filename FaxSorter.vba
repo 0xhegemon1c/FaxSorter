@@ -11,7 +11,7 @@ Dim oAttachment As Outlook.Attachment
 Dim sFolderName As String
 sFolderName = Format(Now, "mm-dd-yyyy")
 
-'VBA FileSystemObject to work with files + folders on our system (I:) and to convert in Adobe'
+'VBA FileSystemObject to work with files + folders on our system (C:) and to convert files in Adobe Acrobat'
 Dim FSO As Object
 Dim FSOFile As Object
 Dim FSOLibrary As Object
