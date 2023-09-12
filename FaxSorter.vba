@@ -1,6 +1,6 @@
 Sub FaxSorter()
 
-'coded by Jacqueline Xavier'
+'Developed by Jay Xavier'
 'Manipulating within Outlook (defining attachments and folders)`
 Dim ns As Outlook.NameSpace
 Set ns = Application.GetNamespace("MAPI")
@@ -23,28 +23,22 @@ createFile = False
 Dim i As Integer: i = 1
 
 'Define path to the target folder in Outlook'
-Set moveToFolderMayo = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Mayo")
-Set moveToFolderNeo = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Neogenomics")
-Set moveToFolderFou = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Foundation")
-Set moveToFolderInter = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Interpace Diagnostics")
-Set moveToFolderThyro = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Thyroseq")
-Set moveToFolderArkana = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("Arkana")
-Set moveToFolderOncoType = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("OncoType")
-Set moveToFolderOncoCyte = ns.Folders("LabSS.Faxes").Folders("Path_Reports").Folders("OncoCyte")
+Set moveToFolderSender1 = ns.Folders("Folder").Folders("subfolder").Folders("additional_subfolder")
+Set moveToFolderSender2 = ns.Folders("Folder").Folders("subfolder").Folders("additional_subfolder")
 
 'check if user has selected an email'
 If Application.ActiveExplorer.Selection.Count = 0 Then
    MsgBox ("No email selected")
    Exit Sub
 End If
-
+'For emails selected, if they contain pdf attachments (efax), download them to a folder of the user's choice, create a subfolder that is named with the date the program is run and store faxes there'
 For Each objItem In Application.ActiveExplorer.Selection
     If objItem.Class = olMail Then
         For Each oAttachment In objItem.Attachments
           If InStr(oAttachment.DisplayName, ".pdf") Then
           Set FSO = CreateObject("Scripting.FileSystemObject")
           Set FSOLibrary = CreateObject("Scripting.FileSystemObject")
-          fldrname = BrowseForFolder("I:\Lab\Path_Reports\")
+          fldrname = BrowseForFolder("folder path goes here")
           datename = "\" & sFolderName
           Do While createFile = False
            newfldr = fldrname & datename & " " & "(" & i & ")"
@@ -58,7 +52,8 @@ For Each objItem In Application.ActiveExplorer.Selection
           oAttachment.SaveAsFile newfldr & "\" & Format(DateAdd("d", -1, objItem.ReceivedTime), "mm-dd-yyyy" & "_" & "H-mm") & "_" & oAttachment.DisplayName
           Set FSOFolder = FSOLibrary.GetFolder(newfldr)
           Set FSOFile = FSOFolder.Files
-          Debug.Print "report downloaded to i: drive in new folder."
+          Debug.Print "report downloaded to c: drive in new folder."
+'this next part calls the macro to convert the saved pdf into image files for each page, and saves the pages to the subfolder containing the original pdf download'
             For Each FSOFile In FSOFile
               Call SavePDFAsJPG(FSOFile)
               Debug.Print "pages converted to JPG"
@@ -66,31 +61,13 @@ For Each objItem In Application.ActiveExplorer.Selection
           End If
         Next
           objItem.UnRead = False
-          Select Case fldrname
-          Case "I:\Lab\Path_Reports\Mayo"
-          objItem.Move moveToFolderMayo
-          Debug.Print "Fax sorted fax sorted to Mayo folder"
-          Case "I:\Lab\Path_Reports\Neogenomics"
-          objItem.Move moveToFolderNeo
-          Debug.Print "Fax sorted to Neogenomics folder"
-          Case "I:\Lab\Path_Reports\Foundation"
-          objItem.Move moveToFolderFou
-          Debug.Print "Fax sorted to Foundation folder"
-          Case "I:\Lab\Path_Reports\Interpace Diagnostics"
-          objItem.Move moveToFolderInter
-          Debug.Print "Fax sorted to Interpace Diagnostics folder"
-          Case "I:\Lab\Path_Reports\Thyroseq"
-          objItem.Move moveToFolderThyro
-          Debug.Print "Fax sorted to Thyroseq folder"
-          Case "I:\Lab\Path_Reports\Arkana"
-          objItem.Move moveToFolderArkana
-          Debug.Print "Fax sorted to Arkana folder"
-          Case "I:\Lab\Path_Reports\OncoType"
-          objItem.Move moveToFolderOncoType
-          Debug.Print "Fax sorted to OncoType folder"
-          Case "I:\Lab\Path_Reports\OncoCyte"
-          objItem.Move moveToFolderOncoCyte
-          Debug.Print "Fax sorted to OncoCyte folder"
+          Select Case fldrname 'this is used when sorting faxes from multiple senders, the email containing the fax is marked as read and moved to a subfolder in Outlook depending on which folder the pdf is downloaded to.'
+          Case "C:\faxes\sender1"
+          objItem.Move moveToFolderSender1
+          Debug.Print "Fax sorted and moved to sender1 folder"
+          Case "C:\faxes\sender2"
+          objItem.Move moveToFolderSender2
+          Debug.Print "Fax sorted and moved to sender2 folder"
           End Select
   End If
 Next
